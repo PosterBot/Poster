@@ -1,0 +1,6 @@
+{ "@testChannelJem" : { 
+				"filePath" : "file.txt", 
+				"type": "links", 
+				"times" : ["15:20", "15:21", "15:22", "17:30"]
+				}
+}
