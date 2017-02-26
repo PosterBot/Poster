@@ -1,1 +1,0 @@
-https://medium.com/fusebox/webpack-is-not-the-only-way-6ddb67e99be9 WebPack — это не единственный путь для бандлинга
