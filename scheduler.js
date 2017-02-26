@@ -20,7 +20,7 @@ module.exports = function(settings){
 				var settings = publicsSettings[publicItem];
 				for(var i = 0; i < settings.times.length; i++){
 					var time = parseTimeToCron(settings.times[i], '1-7');
-					console.log(time)
+					console.log('---', settings.times[i])
 					var task = schedule.scheduleJob(time, function(){
 							var postData = fileManager.readStringFromFile(settings.filePath),
 								requestData;
@@ -100,7 +100,7 @@ module.exports = function(settings){
 				var post = getPostFunction(key, settings);
 				for(var i = 0; i < times.length; i++){
 					var time = parseTimeToCron(settings.times[i], '0-7');
-					console.log(settings.times[i])
+					console.log('---', settings.times[i])
 					var task = schedule.scheduleJob(time, post);
 					jobs.push(task);
 				}
@@ -108,7 +108,7 @@ module.exports = function(settings){
 
 		},
 		listJobsCount: function(){
-			console.log(jobs.length)
+			console.log('Tsks count: ', jobs.length)
 		}
 	}
 
