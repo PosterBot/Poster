@@ -1,6 +1,36 @@
 var request = require('request'),
 	constants = require('./constants');
 
+var getNewContent = function(linksArray){
+	var dataList = []
+	for(var i = 0; i < linksArray.length; i++){
+		var item = new Promise(function(resolve,reject){
+				request(linksArray[i], function(err, response, body) {
+					console.log(response.statusCode + '- contentStealer')
+					resolve(body)
+				})
+			})
+		dataList.push(item);			
+		};
+		return Promise.all(dataList);
+	
+}
+
+var getTitleLinks = function(requestParams){
+	return new Promise(function(resolve,reject){
+         if(!requestParams){
+			reject();
+		} else {
+			var host = requestParams.host;
+			delete requestParams.host;
+			request({url:host, qs:requestParams}, function(err, response, body) {
+				console.log(response.statusCode + '- contentStealer')
+				resolve(body)
+			})
+		}
+    });
+}
+
 function RequestManagerMaker(settings){}
 
 RequestManagerMaker.getManager = function(type,settings){
@@ -18,6 +48,8 @@ RequestManagerMaker.VkManager = function(settings){
 	this.token = settings.token;
 	this.host = "https://api.vk.com/method/wall.post"
 	this.postFromGroup = 1;
+	this.getNewContent = getNewContent;
+	this.getTitleLinks = getTitleLinks;	
 }
 
 RequestManagerMaker.TelegramManager = function(settings){
@@ -25,7 +57,9 @@ RequestManagerMaker.TelegramManager = function(settings){
 	this.disable_web_page_preview = 'false';
     this.host = "https://api.telegram.org/bot" + this.token + "/";
 	this.headers = {"User-Agent" : "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.30 (KHTML, like Gecko) Ubuntu/11.04 Chromium/12.0.742.112 Chrome/12.0.742.112 Safari/534.30"}
-    this.youtube_check_url = 'https://www.youtube.com/oembed'
+    this.youtube_check_url = 'https://www.youtube.com/oembed';
+	this.getNewContent = getNewContent;
+	this.getTitleLinks = getTitleLinks;
 }
 
 RequestManagerMaker.VkManager.prototype.postData = function(post, publicId){
@@ -50,34 +84,5 @@ RequestManagerMaker.TelegramManager.prototype.postData = function(channel_id, da
 
 }
 
-RequestManagerMaker.prototype.getTitleLinks = function(requestParams){
-	return new Promise(function(resolve,reject){
-         if(!requestParams){
-			reject();
-		} else {
-			var host = requestParams.host;
-			delete requestParams.host;
-			request({url:host, qs:requestParams}, function(err, response, body) {
-				console.log(response.statusCode + '- contentStealer')
-				resolve(body)
-			})
-		}
-    });
-}
-
-RequestManagerMaker.prototype.getNewContent = function(linksArray){
-	var dataList = []
-	for(var i = 0; i < linksArray.length; i++){
-		var item = new Promise(function(resolve,reject){
-				request(linksArray[i], function(err, response, body) {
-					console.log(response.statusCode + '- contentStealer')
-					resolve(body)
-				})
-			})
-		dataList.push(item);			
-		};
-		return Promise.all(dataList);
-	
-}
 
 module.exports = RequestManagerMaker;

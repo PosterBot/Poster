@@ -18,6 +18,7 @@ module.exports = function(settings){
 		
 			for( publicItem in publicsSettings){
 				var settings = publicsSettings[publicItem];
+				console.log(settings.publicId);
 				for(var i = 0; i < settings.times.length; i++){
 					var time = parseTimeToCron(settings.times[i], '1-7');
 					console.log('---', settings.times[i])

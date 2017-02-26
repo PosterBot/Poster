@@ -1,10 +1,10 @@
 var fileManager = require('./fileManager'),
 	scheduler;
 
-var settingFile = './settings.json',
-	publicsFile = './publicsSettings.json',
-	contentStealerFile = './contentStealer.json',
-	channelsFile = './tchannels.json'
+var settingFile = './settings/settings.json',
+	publicsFile = './settings/vkpublic.json',
+	contentStealerFile = './settings/contentStealer.json',
+	channelsFile = './settings/telegramchannel.json'
 	settings = fileManager.readDataFromJson(settingFile),
 	publicsList = fileManager.readDataFromJson(publicsFile),
 	stealerSettings = fileManager.readDataFromJson(contentStealerFile),
