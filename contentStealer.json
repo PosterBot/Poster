@@ -1,0 +1,13 @@
+{ 
+	"frontEndDev" : {
+				"link" : {
+					"host": "https://habrahabr.ru/search/",
+					"target_type": "posts",
+					"q": "Дайджест свежих материалов из мира фронтенда",
+					"order_by": "date"
+				},
+				"filePath" : ["frontEndDev_public.txt", "frontEndDev.txt"],
+				"resultFile": "frontEndDev_listResult.txt", 
+				"times" : "0 0 23 * * 1"
+				}
+}

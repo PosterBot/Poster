@@ -1,0 +1,30 @@
+{
+  "name": "vk_poster",
+  "version": "0.0.1",
+  "description": "poster for vk groups",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jemsgit/VK_poster.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jemsgit/VK_poster/issues"
+  },
+  "homepage": "https://github.com/jemsgit/VK_poster#readme",
+  "devDependencies": {
+    "jquery": "^3.1.1",
+    "jsdom": "^9.11.0",
+    "lodash": "^4.17.4",
+    "node-cron": "^1.1.3",
+    "request": "^2.79.0"
+  },
+  "dependencies": {
+    "lodash.shuffle": "^4.2.0",
+    "node-schedule": "^1.2.0"
+  }
+}
