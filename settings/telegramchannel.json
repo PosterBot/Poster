@@ -1,5 +1,5 @@
 { "@111" : { 
-				"filePath" : "1/1.txt", 
+				"filePath" : "1/1_channel.txt", 
 				"type": "links", 
 				"times" : ["09:00", "12:30", "14:50", "17:45", "20:00"]
 				}
