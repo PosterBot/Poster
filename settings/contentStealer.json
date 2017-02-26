@@ -1,0 +1,13 @@
+{ 
+	"frontEndDev" : {
+				"link" : {
+					"host": "https://habrahabr.ru/search/",
+					"target_type": "posts",
+					"q": "1111",
+					"order_by": "date"
+				},
+				"filePath" : ["1/1_public.txt", "1/1_channel.txt"],
+				"resultFile": "1/1_listResult.txt", 
+				"times" : "0 10 12 * * 1"
+				}
+}

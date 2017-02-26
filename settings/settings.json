@@ -1,0 +1,9 @@
+{
+	"vkSettings": {
+		"token": "1111",
+		"url": "https://oauth.vk.com/authorize?client_id=51111&scope=offline,group,photos,wall&display=page&response_type=token&redirect_uri=https://oauth.vk.com/blank.html"
+	},
+	"telegramSettings": {
+		"token": "111"
+	}
+}
