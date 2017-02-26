@@ -64,7 +64,7 @@ RequestManagerMaker.TelegramManager = function(settings){
 
 RequestManagerMaker.VkManager.prototype.postData = function(post, publicId){
 	var propertiesObject = { owner_id:'-' + publicId, access_token:this.token, from_group: this.postFromGroup, message: post.message, attachment: post.link };
-	request({url:this.vk_host, qs:propertiesObject}, function(err, response, body) {
+	request({url:this.host, qs:propertiesObject}, function(err, response, body) {
 		console.log(response.statusCode + ' - ' + post.link)
 	})
 }

@@ -20,7 +20,7 @@ module.exports = function(settings){
 				var settings = publicsSettings[publicItem];
 				console.log(settings.publicId);
 				for(var i = 0; i < settings.times.length; i++){
-					var time = parseTimeToCron(settings.times[i], '1-7');
+					var time = parseTimeToCron(settings.times[i], '0-6');
 					console.log('---', settings.times[i])
 					var task = schedule.scheduleJob(time, function(){
 							var postData = fileManager.readStringFromFile(settings.filePath),
@@ -100,7 +100,7 @@ module.exports = function(settings){
 				}
 				var post = getPostFunction(key, settings);
 				for(var i = 0; i < times.length; i++){
-					var time = parseTimeToCron(settings.times[i], '0-7');
+					var time = parseTimeToCron(settings.times[i], '0-6');
 					console.log('---', settings.times[i])
 					var task = schedule.scheduleJob(time, post);
 					jobs.push(task);
