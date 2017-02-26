@@ -3,11 +3,11 @@
 				"link" : {
 					"host": "https://habrahabr.ru/search/",
 					"target_type": "posts",
-					"q": "Дайджест свежих материалов из мира фронтенда",
+					"q": "Text",
 					"order_by": "date"
 				},
-				"filePath" : ["frontEndDev_public.txt", "frontEndDev.txt"],
-				"resultFile": "frontEndDev_listResult.txt", 
+				"filePath" : ["file1.txt", "file2.txt"],
+				"resultFile": "fileResults.txt", 
 				"times" : "0 0 23 * * 1"
 				}
 }
