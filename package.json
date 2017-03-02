@@ -24,6 +24,7 @@
     "request": "^2.79.0"
   },
   "dependencies": {
+    "google-url": "0.0.4",
     "lodash.shuffle": "^4.2.0",
     "node-schedule": "^1.2.0"
   }

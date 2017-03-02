@@ -1,5 +1,6 @@
 var request = require('request'),
-	constants = require('./constants');
+	constants = require('./constants'),
+	GoogleURL = require( 'google-url' );
 
 var getNewContent = function(linksArray){
 	var dataList = []
@@ -60,6 +61,7 @@ RequestManagerMaker.TelegramManager = function(settings){
     this.youtube_check_url = 'https://www.youtube.com/oembed';
 	this.getNewContent = getNewContent;
 	this.getTitleLinks = getTitleLinks;
+	this.googleUrl = new GoogleURL( { key: settings.googleApiKey });
 }
 
 RequestManagerMaker.VkManager.prototype.postData = function(post, publicId){
@@ -73,11 +75,35 @@ RequestManagerMaker.TelegramManager.prototype.postData = function(channel_id, da
 	switch(type){
 		case constants.links:
 		console.log('LIIINK')
+			var that = this;
 			var message = data.message + ' ' + data.link;
 			var url = this.host + "sendMessage";
-			var propertiesObject = {chat_id:channel_id, text: message, disable_web_page_preview: this.disable_web_page_preview}
+			var propertiesObject = {chat_id:channel_id, text: message, disable_web_page_preview: this.disable_web_page_preview, }
 			request.post({url: url, form: propertiesObject}, function(err, response, body) {
-				console.log(response.statusCode + ' - ' + data.link)
+				console.log(response.statusCode + ' - ' + data.link);
+				var body = JSON.parse(body);
+				var shareLink = 'https://t.me/' + body.result.chat.username + '/' + body.result.message_id
+				var url = that.host + 'editMessageReplyMarkup';
+
+				that.googleUrl.shorten(shareLink, function( err, shortUrl ) {
+					var prop = {
+						chat_id: '@' + body.result.chat.username, 
+						message_id: body.result.message_id, 
+						reply_markup: JSON.stringify({
+							inline_keyboard: [
+								[{text: "Share Vk", url: 'http://vk.com/share.php?url=' + shortUrl}, {text: "Share Facebook", url: 'https://www.facebook.com/sharer/sharer.php?u=' + shareLink}]
+							]
+						})
+					}
+				
+					request.post({url: url, form: prop}, function(err, response, body) {
+						if(err){
+							console.log('Error update buttons: ', err)
+						}
+					});
+				});
+				
+
 			});
 			break;
 	}
