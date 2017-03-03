@@ -78,28 +78,32 @@ RequestManagerMaker.TelegramManager.prototype.postData = function(channel_id, da
 			var that = this;
 			var message = data.message + ' ' + data.link;
 			var url = this.host + "sendMessage";
-			var propertiesObject = {chat_id:channel_id, text: message, disable_web_page_preview: this.disable_web_page_preview, }
+			var propertiesObject = {chat_id:channel_id, text: message, disable_web_page_preview: this.disable_web_page_preview }
 			request.post({url: url, form: propertiesObject}, function(err, response, body) {
 				console.log(response.statusCode + ' - ' + data.link);
 				var body = JSON.parse(body);
 				var shareLink = 'https://t.me/' + body.result.chat.username + '/' + body.result.message_id
+				var shareVkLink = 'http://vk.com/share.php?url=' + shareLink + '&title=' + data.message;
+				var shareFbLink = 'https://www.facebook.com/sharer/sharer.php?u=' + shareLink;
 				var url = that.host + 'editMessageReplyMarkup';
 
-				that.googleUrl.shorten(shareLink, function( err, shortUrl ) {
-					var prop = {
-						chat_id: '@' + body.result.chat.username, 
-						message_id: body.result.message_id, 
-						reply_markup: JSON.stringify({
-							inline_keyboard: [
-								[{text: "Share Vk", url: 'http://vk.com/share.php?url=' + shortUrl}, {text: "Share Facebook", url: 'https://www.facebook.com/sharer/sharer.php?u=' + shareLink}]
-							]
-						})
-					}
-				
-					request.post({url: url, form: prop}, function(err, response, body) {
-						if(err){
-							console.log('Error update buttons: ', err)
+				that.googleUrl.shorten(shareVkLink, function( err1, shortUrlVk ) {
+					that.googleUrl.shorten(shareFbLink, function( err2, shortUrlFb ) {
+						var prop = {
+							chat_id: '@' + body.result.chat.username, 
+							message_id: body.result.message_id, 
+							reply_markup: JSON.stringify({
+								inline_keyboard: [
+									[{text: "Share Vk", url: shortUrlVk}, {text: "Share Facebook", url: shortUrlFb}]
+								]
+							})
 						}
+				
+						request.post({url: url, form: prop}, function(error, response, body) {
+							if(err){
+								console.log('Error update buttons: ', error)
+							}
+						});
 					});
 				});
 				
