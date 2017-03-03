@@ -85,13 +85,15 @@ RequestManagerMaker.TelegramManager.prototype.postData = function(channel_id, da
 				var shareLink = 'https://t.me/' + body.result.chat.username + '/' + body.result.message_id
 				var shareVkLink = 'http://vk.com/share.php?url=' + shareLink + '&title=' + data.message;
 				var shareFbLink = 'https://www.facebook.com/sharer/sharer.php?u=' + shareLink;
-				var url = that.host + 'editMessageReplyMarkup';
+				var url = that.host + 'editMessageText';
 
 				that.googleUrl.shorten(shareVkLink, function( err1, shortUrlVk ) {
 					that.googleUrl.shorten(shareFbLink, function( err2, shortUrlFb ) {
 						var prop = {
 							chat_id: '@' + body.result.chat.username, 
 							message_id: body.result.message_id, 
+							text:message,
+							disable_web_page_preview: that.disable_web_page_preview,
 							reply_markup: JSON.stringify({
 								inline_keyboard: [
 									[{text: "Share Vk", url: shortUrlVk}, {text: "Share Facebook", url: shortUrlFb}]
