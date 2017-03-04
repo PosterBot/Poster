@@ -4,11 +4,9 @@ var fileManager = require('./fileManager'),
 	provider = require('./firebaseProvider');
 winston.cli();
 
-var settingFile = './settings/settings.json',
-	publicsFile = './settings/vkpublic.json',
+var publicsFile = './settings/vkpublic.json',
 	contentGrabberFile = './settings/contentGrabber.json',
-	channelsFile = './settings/telegramchannel.json'
-	settings = fileManager.readDataFromJson(settingFile),
+	channelsFile = './settings/telegramchannel.json',
 	publicsList = fileManager.readDataFromJson(publicsFile),
 	//grabberSettings, = fileManager.readDataFromJson(contentGrabberFile),
 	channelsList = fileManager.readDataFromJson(channelsFile),
@@ -16,6 +14,13 @@ var settingFile = './settings/settings.json',
 
 	provider.init(function() {
 		scheduler = require('./scheduler')();
+		provider.getChannels(provider.API.telegram, function(list) {
+			scheduler.setTelegramPostTimer(list)
+		});
+
+		provider.getPublication(provider.API.telegram, "testChannelJem" ,function(publication) {
+			winston.log(level, colors.magenta("Main"), "Publication", publication)
+		});
 	});
 
 	/*if(settings && publicsList){
