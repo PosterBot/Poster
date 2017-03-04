@@ -1,5 +1,6 @@
  var fs = require("fs"),
-	_ = require('lodash');
+	_ = require('lodash'),
+	winston = require('winston');
 
 module.exports = {
 	readDataFromFile: function(path){
@@ -7,16 +8,18 @@ module.exports = {
 		try{
 			var content = fs.readFileSync(path, 'utf8');
 		} catch (error){
+      winston.log('error', error)
 			console.error(error);
 		}
 		return content
 	},
 	readDataFromJson: function(path){
 		var content = this.readDataFromFile(path);
-		
+
 		try{
 			content = JSON.parse(content);
 		} catch (error){
+      winston.log('error', error)
 			console.error(error);
 		}
 		return content
@@ -28,9 +31,9 @@ module.exports = {
 				result = lines.splice(0,1)[0];
 			fs.writeFileSync(filePath, lines.join('\r\n'));
 		}
-		
+
 		return result;
-		
+
 	},
 	getOldTitlesFromFile: function(filePath){
 		var result = this.readDataFromFile(filePath),
@@ -48,5 +51,5 @@ module.exports = {
 				fs.writeFileSync(filePath, lines.join('\r\n'));
 			}
 	}
-	
+
 }

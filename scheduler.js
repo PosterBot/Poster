@@ -1,7 +1,8 @@
 var schedule = require('node-schedule'),
 	requestManagerBuilder = require('./requestManager'),
 	fileManager = require('./fileManager'),
-	dataParser = require('./dataParser');
+	dataParser = require('./dataParser'),
+	winston = require('winston');
 
 function parseTimeToCron(timeString, periodic){
 	var time = timeString.split(':');
@@ -12,16 +13,16 @@ module.exports = function(settings){
 		var vkReuqestManager = new requestManagerBuilder.getManager('VkManager', settings.vkSettings),
 			telegramRequestManager = new requestManagerBuilder.getManager('TelegramManager', settings.telegramSettings),
 			jobs = [];
-		
+
 	return {
 		setPostTimer: function(publicsSettings){
-		
+
 			for( publicItem in publicsSettings){
 				var settings = publicsSettings[publicItem];
-				console.log(settings.publicId);
+				winston.log('info', settings.publicId);
 				for(var i = 0; i < settings.times.length; i++){
 					var time = parseTimeToCron(settings.times[i], '0-6');
-					console.log('---', settings.times[i])
+					winston.log('data', settings.times[i])
 					var task = schedule.scheduleJob(time, function(){
 							var postData = fileManager.readStringFromFile(settings.filePath),
 								requestData;
@@ -31,14 +32,14 @@ module.exports = function(settings){
 									vkReuqestManager.postData(requestData, settings.publicId);
 								}
 							}
-							
+
 						})
 					jobs.push(task)
 				}
-			
+
 			}
 		},
-		setContentStealerTimer: function(settings){
+		setContentGrabberTimer: function(settings){
 			if(settings.times && settings.link){
 				var process = function(){
 						var request = vkReuqestManager.getTitleLinks(settings.link);
@@ -63,7 +64,7 @@ module.exports = function(settings){
 										}
 										fileManager.addNewArrayDataFile(resultData, settings.filePath[i])
 									}
-									
+
 								}, function(error){
 									console.error(error);
 								})
@@ -76,32 +77,32 @@ module.exports = function(settings){
 				var task = schedule.scheduleJob(settings.times, process);
 				jobs.push(task)
 			}
-					
+
 		},
 		setTelegramPostTimer: function(channelsList){
 			for (key in channelsList){
 				var settings = channelsList[key],
 					times = settings.times;
-				console.log(key)
+				winston.log('info', key)
 
 				function getPostFunction(key, settings){
 					var post = function(){
 						var data = fileManager.readStringFromFile(settings.filePath);
-						console.log(data)
-						
+						winston.log('info', data)
+
 						if (data){
-							
+
 							var newData = dataParser.parsePostString(data, settings.type);
 							var request = telegramRequestManager.postData(key, newData, settings.type)
 						}
-						
+
 					}
 					return post
 				}
 				var post = getPostFunction(key, settings);
 				for(var i = 0; i < times.length; i++){
 					var time = parseTimeToCron(settings.times[i], '0-6');
-					console.log('---', settings.times[i])
+					winston.log('data', settings.times[i])
 					var task = schedule.scheduleJob(time, post);
 					jobs.push(task);
 				}
@@ -109,7 +110,7 @@ module.exports = function(settings){
 
 		},
 		listJobsCount: function(){
-			console.log('Tsks count: ', jobs.length)
+			winston.log('info', 'Tasks amount ', jobs.length)
 		}
 	}
 

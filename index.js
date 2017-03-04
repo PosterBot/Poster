@@ -1,41 +1,39 @@
 var fileManager = require('./fileManager'),
-	scheduler;
+	scheduler,
+	winston = require('winston');
+winston.cli();
 
 var settingFile = './settings/settings.json',
 	publicsFile = './settings/vkpublic.json',
-	contentStealerFile = './settings/contentStealer.json',
+	contentGrabberFile = './settings/contentGrabber.json',
 	channelsFile = './settings/telegramchannel.json'
 	settings = fileManager.readDataFromJson(settingFile),
 	publicsList = fileManager.readDataFromJson(publicsFile),
-	stealerSettings = fileManager.readDataFromJson(contentStealerFile),
+	//grabberSettings, = fileManager.readDataFromJson(contentGrabberFile),
 	channelsList = fileManager.readDataFromJson(channelsFile),
 	scheduler;
-	
+
 	if(settings && publicsList){
 		scheduler = require('./scheduler')(settings);
 		scheduler.setPostTimer(publicsList);
 	} else {
-		console.log('error file reading -> exit')
+		winston.log('error', 'error file reading -> exit')
 	}
-	
+
 	if(settings && channelsList){
 		if(!scheduler){
 			scheduler = require('./scheduler')(settings);
 		}
 		scheduler.setTelegramPostTimer(channelsList)
-		
+
 	}
-	
-	if(stealerSettings){
-		for(prop in stealerSettings){
-			scheduler.setContentStealerTimer(stealerSettings[prop]);
+
+	/*if(grabberSettings){
+		for(prop in grabberSettings){
+			scheduler.setContentGrabberTimer(grabberSettings[prop]);
 		}
-	}
-	
+	}*/
+
 	if(scheduler){
 		scheduler.listJobsCount();
 	}
-	
-
-
-
