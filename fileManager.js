@@ -9,7 +9,6 @@ module.exports = {
 			var content = fs.readFileSync(path, 'utf8');
 		} catch (error){
       winston.log('error', error)
-			console.error(error);
 		}
 		return content
 	},
@@ -20,7 +19,6 @@ module.exports = {
 			content = JSON.parse(content);
 		} catch (error){
       winston.log('error', error)
-			console.error(error);
 		}
 		return content
 	},

@@ -2,27 +2,36 @@ var schedule = require('node-schedule'),
 	requestManagerBuilder = require('./requestManager'),
 	fileManager = require('./fileManager'),
 	dataParser = require('./dataParser'),
-	winston = require('winston');
+	winston = require('winston'),
+	colors = require('colors'),
+	provider = require('./firebaseProvider');
 
 function parseTimeToCron(timeString, periodic){
 	var time = timeString.split(':');
 	return '12 ' + time[1] + ' ' + time[0] + ' * * ' + periodic
 }
 
-module.exports = function(settings){
-		var vkReuqestManager = new requestManagerBuilder.getManager('VkManager', settings.vkSettings),
-			telegramRequestManager = new requestManagerBuilder.getManager('TelegramManager', settings.telegramSettings),
+module.exports = function(){
+		var vkReuqestManager,// = new requestManagerBuilder.getManager('VkManager', settings.vkontakte),
+			telegramRequestManager,// = new requestManagerBuilder.getManager('TelegramManager', settings.telegram),
 			jobs = [];
+			provider.apiKey(provider.API.vk, function(config) {
+				vkReuqestManager = new requestManagerBuilder.getManager('VkManager', config)
+			});
+
+			provider.apiKey(provider.API.telegram, function(config) {
+				telegramRequestManager = new requestManagerBuilder.getManager('TelegramManager', config)
+			});
 
 	return {
 		setPostTimer: function(publicsSettings){
 
 			for( publicItem in publicsSettings){
 				var settings = publicsSettings[publicItem];
-				winston.log('info', settings.publicId);
+				log('info', settings.publicId);
 				for(var i = 0; i < settings.times.length; i++){
 					var time = parseTimeToCron(settings.times[i], '0-6');
-					winston.log('data', settings.times[i])
+					log('data', settings.times[i])
 					var task = schedule.scheduleJob(time, function(){
 							var postData = fileManager.readStringFromFile(settings.filePath),
 								requestData;
@@ -66,11 +75,11 @@ module.exports = function(settings){
 									}
 
 								}, function(error){
-									console.error(error);
+									log('error', error);
 								})
 							}
 						}, function(error){
-							console.error(error);
+							log('error', error);
 						}
 						)
 					}
@@ -83,12 +92,12 @@ module.exports = function(settings){
 			for (key in channelsList){
 				var settings = channelsList[key],
 					times = settings.times;
-				winston.log('info', key)
+				log('info', key)
 
 				function getPostFunction(key, settings){
 					var post = function(){
 						var data = fileManager.readStringFromFile(settings.filePath);
-						winston.log('info', data)
+						log('info', data)
 
 						if (data){
 
@@ -102,7 +111,7 @@ module.exports = function(settings){
 				var post = getPostFunction(key, settings);
 				for(var i = 0; i < times.length; i++){
 					var time = parseTimeToCron(settings.times[i], '0-6');
-					winston.log('data', settings.times[i])
+					log('data', settings.times[i])
 					var task = schedule.scheduleJob(time, post);
 					jobs.push(task);
 				}
@@ -110,8 +119,14 @@ module.exports = function(settings){
 
 		},
 		listJobsCount: function(){
-			winston.log('info', 'Tasks amount ', jobs.length)
+			log('info', 'Tasks amount ' + jobs.length)
 		}
 	}
 
+}
+
+
+function log(level, message) {
+  // TODO: Need to create a global method with a enum of message groups
+  winston.log(level, colors.yellow("Scheduler"), message)
 }

@@ -1,6 +1,7 @@
 var fileManager = require('./fileManager'),
 	scheduler,
-	winston = require('winston');
+	winston = require('winston'),
+	provider = require('./firebaseProvider');
 winston.cli();
 
 var settingFile = './settings/settings.json',
@@ -13,27 +14,27 @@ var settingFile = './settings/settings.json',
 	channelsList = fileManager.readDataFromJson(channelsFile),
 	scheduler;
 
-	if(settings && publicsList){
+	provider.init(function() {
+		scheduler = require('./scheduler')();
+	});
+
+	/*if(settings && publicsList){
 		scheduler = require('./scheduler')(settings);
 		scheduler.setPostTimer(publicsList);
 	} else {
 		winston.log('error', 'error file reading -> exit')
-	}
+	}*/
 
-	if(settings && channelsList){
+	/*if(settings && channelsList){
 		if(!scheduler){
 			scheduler = require('./scheduler')(settings);
 		}
 		scheduler.setTelegramPostTimer(channelsList)
 
-	}
+	}*/
 
 	/*if(grabberSettings){
 		for(prop in grabberSettings){
 			scheduler.setContentGrabberTimer(grabberSettings[prop]);
 		}
 	}*/
-
-	if(scheduler){
-		scheduler.listJobsCount();
-	}

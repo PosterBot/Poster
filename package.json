@@ -26,6 +26,7 @@
     "request": "^2.79.0"
   },
   "dependencies": {
+    "firebase": "3.7.0",
     "jquery": "^3.1.1",
     "google-url": "0.0.4",
     "winston": "2.3.1",
