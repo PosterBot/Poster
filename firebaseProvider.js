@@ -157,10 +157,9 @@ var getPublication = function(api, name, bindFunction) {
   publication.once('value',function(snapshot) {
     if (snapshot.hasChildren()) {
       snapshot.forEach(function(childSnapshot) {
-        // TODO: remove data after post
         var childKey = childSnapshot.key;
         var childData = childSnapshot.val();
-        bindFunction(childData);
+        bindFunction(childSnapshot);
         return false;
       });
     } else {
@@ -168,6 +167,12 @@ var getPublication = function(api, name, bindFunction) {
     }
   });
 }
+
+var removePublication = function(api, name, key) {
+  log('info', "Removing channel publication " + colors.gray(key) + " for " + colors.green(name) + " ["+ colors.blue(api) + "]")
+  firebase.database().ref('content/' + api + "/" + name).child(key).remove()
+}
+
 
 function log(level, message) {
   // TODO: Need to create a global method with a enum of message groups
@@ -181,4 +186,5 @@ module.exports.apiKey = apiKey;
 module.exports.channelSettings = channelSettings;
 module.exports.getChannels = getChannels;
 module.exports.getPublication = getPublication;
+module.exports.removePublication = removePublication;
 module.exports.API = API;

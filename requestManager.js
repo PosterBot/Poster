@@ -73,22 +73,24 @@ RequestManagerMaker.VkManager.prototype.postData = function(post, publicId){
 	})
 }
 
-RequestManagerMaker.TelegramManager.prototype.postData = function(channel_id, data, type){
+RequestManagerMaker.TelegramManager.prototype.postData = function(channel_id, data, type, callback){
 	var channel_id = '@'+channel_id
-	log('info', colors.underline(channel_id) + ': Post telegram data \"' + colors.gray(data) + '\" as ' + colors.green(type))
+	logChannel('info', channel_id, 'Post telegram data \"' + colors.gray(data) + '\" as ' + colors.green(type))
 	switch(type){
 		case constants.links:
-		log('info', 'LIIINK')
 			var that = this;
 			var message = data;
 			var url = this.host + "sendMessage";
 			var propertiesObject = {chat_id: channel_id, text: message, disable_web_page_preview: this.disable_web_page_preview }
 			request.post({url: url, form: propertiesObject}, function(err, response, body) {
-				log('info', response.statusCode + ' - ' + data.link);
+				logChannel('info', channel_id, response.statusCode + ' - ' + data);
 				var body = JSON.parse(body);
-				log('data',body)
 				if (body.ok == false) {
+					logChannel('error', channel_id, body)
 					return
+				} else {
+					callback();
+					logChannel('data', channel_id, body)
 				}
 
 				var shareLink = 'https://t.me/' + body.result.chat.username + '/' + body.result.message_id
@@ -112,10 +114,11 @@ RequestManagerMaker.TelegramManager.prototype.postData = function(channel_id, da
 
 						request.post({url: url, form: prop}, function(error, response, body) {
 							if(err){
-								log('error', 'Error update buttons: ' + error)
+								logChannel('error', channel_id, + 'Error update buttons: ' + error)
 							}
 						});
 					});
+
 				});
 
 
@@ -127,6 +130,11 @@ RequestManagerMaker.TelegramManager.prototype.postData = function(channel_id, da
 
 
 module.exports = RequestManagerMaker;
+
+function logChannel(level, channel_id, message) {
+  // TODO: Need to create a global method with a enum of message groups
+  winston.log(level, colors.cyan("RequestManager"), colors.underline(channel_id) + ':',message)
+}
 
 function log(level, message) {
   // TODO: Need to create a global method with a enum of message groups
