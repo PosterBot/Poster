@@ -74,13 +74,15 @@ RequestManagerMaker.VkManager.prototype.postData = function(post, publicId){
 }
 
 RequestManagerMaker.TelegramManager.prototype.postData = function(channel_id, data, type){
+	var channel_id = '@'+channel_id
+	log('info', colors.underline(channel_id) + ': Post telegram data \"' + colors.gray(data) + '\" as ' + colors.green(type))
 	switch(type){
 		case constants.links:
 		log('info', 'LIIINK')
 			var that = this;
-			var message = data;//data.message + ' ' + data.link;
+			var message = data;
 			var url = this.host + "sendMessage";
-			var propertiesObject = {chat_id: "@" + channel_id, text: message, disable_web_page_preview: this.disable_web_page_preview }
+			var propertiesObject = {chat_id: channel_id, text: message, disable_web_page_preview: this.disable_web_page_preview }
 			request.post({url: url, form: propertiesObject}, function(err, response, body) {
 				log('info', response.statusCode + ' - ' + data.link);
 				var body = JSON.parse(body);

@@ -94,21 +94,14 @@ module.exports = function(){
 					times = settings.times;
 				log('info', "Start timer for telegram channel - " + colors.green(key))
 
-				var post = function(key, settings){
-					provider.getPublication(provider.API.telegram, "testChannelJem" ,function(publication) {
-						log('info', "Publication: " + publication)
-						if (publication){
-							var request = telegramRequestManager.postData(key, publication, settings.type)
-						}
-					});
-				}
-
-				for(var i = 0; i < times.length; i++){
-					var time = parseTimeToCron(settings.times[i], '0-6');
-					log('data', settings.times[i]);
-					var task = schedule.scheduleJob(time, post);
-					jobs.push(post(key, settings));
-				}
+				var post = getPostFunction(key, settings.type);
+				// TODO: Clear previous tasks for channel
+				settings.times.forEach(function(time) {
+					var cron = parseTimeToCron(time, '0-6');
+					log('data', "Cron time " + colors.cyan(time) + ' → ' + colors.gray(cron));
+					var task = schedule.scheduleJob(cron, post);
+					jobs.push(task);
+				});
 			}
 
 		},
@@ -119,6 +112,20 @@ module.exports = function(){
 
 }
 
+function getPostFunction(key, type){
+	log('data', 'Create method for ' + key + ' with type - ' + type)
+	var key = key, type = type;
+	var post = function(key, type){
+		provider.getPublication(provider.API.telegram, "testChannelJem" ,function(publication) {
+			log('data', 'Get publication for ' + key + ' with type - ' + type)
+			log('data', "Publication: " + publication)
+			if (publication){
+				var request = telegramRequestManager.postData(key, publication, type)
+			}
+		});
+	}
+	return post;
+}
 
 function log(level, message) {
   // TODO: Need to create a global method with a enum of message groups

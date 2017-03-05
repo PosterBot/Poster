@@ -18,10 +18,6 @@ var publicsFile = './settings/vkpublic.json',
 		provider.getChannels(provider.API.telegram, function(list) {
 			scheduler.setTelegramPostTimer(list)
 		});
-
-		provider.getPublication(provider.API.telegram, "testChannelJem" ,function(publication) {
-			log('info', "Publication: " + publication)
-		});
 	});
 
 	/*if(settings && publicsList){
