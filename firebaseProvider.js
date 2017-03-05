@@ -153,10 +153,13 @@ var getChannels = function(api, updateBind) {
 
 var getPublication = function(api, name, bindFunction) {
   log('info', "Getting channel publication for " + colors.green(name) + " ["+ colors.blue(api) + "]")
-  var publication = firebase.database().ref('content/' + api + "/" + name)
-  publication.once('value').then(function(snapshot) {
-    var publications = snapshot.val()
-    bindFunction(publications)
+  var publication = firebase.database().ref('content/' + api + "/" + name).orderByKey().limitToFirst(1);
+  publication.once('value',function(snapshot) {
+    snapshot.forEach(function(childSnapshot) {
+      var childKey = childSnapshot.key;
+      var childData = childSnapshot.val();
+      bindFunction(childData);
+    });
   });
 }
 
