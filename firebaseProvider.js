@@ -155,11 +155,17 @@ var getPublication = function(api, name, bindFunction) {
   log('info', "Getting channel publication for " + colors.green(name) + " ["+ colors.blue(api) + "]")
   var publication = firebase.database().ref('content/' + api + "/" + name).orderByKey().limitToFirst(1);
   publication.once('value',function(snapshot) {
-    snapshot.forEach(function(childSnapshot) {
-      var childKey = childSnapshot.key;
-      var childData = childSnapshot.val();
-      bindFunction(childData);
-    });
+    if (snapshot.hasChildren()) {
+      snapshot.forEach(function(childSnapshot) {
+        // TODO: remove data after post
+        var childKey = childSnapshot.key;
+        var childData = childSnapshot.val();
+        bindFunction(childData);
+        return false;
+      });
+    } else {
+      bindFunction(false);
+    }
   });
 }
 

@@ -1,14 +1,15 @@
 var request = require('request'),
 	constants = require('./constants'),
 	GoogleURL = require( 'google-url' ),
-	winston = require('winston');
+	winston = require('winston'),
+	colors = require('colors');
 
 var getNewContent = function(linksArray){
 	var dataList = []
 	for(var i = 0; i < linksArray.length; i++){
 		var item = new Promise(function(resolve,reject){
 				request(linksArray[i], function(err, response, body) {
-					winston.log('info', response.statusCode + '- contentStealer')
+					log('info', response.statusCode + '- contentStealer')
 					resolve(body)
 				})
 			})
@@ -26,7 +27,7 @@ var getTitleLinks = function(requestParams){
 			var host = requestParams.host;
 			delete requestParams.host;
 			request({url:host, qs:requestParams}, function(err, response, body) {
-				winston.log('info', response.statusCode + '- contentStealer')
+				log('info', response.statusCode + '- contentStealer')
 				resolve(body)
 			})
 		}
@@ -75,14 +76,19 @@ RequestManagerMaker.VkManager.prototype.postData = function(post, publicId){
 RequestManagerMaker.TelegramManager.prototype.postData = function(channel_id, data, type){
 	switch(type){
 		case constants.links:
-		winston.log('info', 'LIIINK')
+		log('info', 'LIIINK')
 			var that = this;
-			var message = data.message + ' ' + data.link;
+			var message = data;//data.message + ' ' + data.link;
 			var url = this.host + "sendMessage";
-			var propertiesObject = {chat_id:channel_id, text: message, disable_web_page_preview: this.disable_web_page_preview }
+			var propertiesObject = {chat_id: "@" + channel_id, text: message, disable_web_page_preview: this.disable_web_page_preview }
 			request.post({url: url, form: propertiesObject}, function(err, response, body) {
-				winston.log('info', response.statusCode + ' - ' + data.link);
+				log('info', response.statusCode + ' - ' + data.link);
 				var body = JSON.parse(body);
+				log('data',body)
+				if (body.ok == false) {
+					return
+				}
+
 				var shareLink = 'https://t.me/' + body.result.chat.username + '/' + body.result.message_id
 				var shareVkLink = 'http://vk.com/share.php?url=' + shareLink + '&title=' + data.message;
 				var shareFbLink = 'https://www.facebook.com/sharer/sharer.php?u=' + shareLink;
@@ -104,7 +110,7 @@ RequestManagerMaker.TelegramManager.prototype.postData = function(channel_id, da
 
 						request.post({url: url, form: prop}, function(error, response, body) {
 							if(err){
-								winston.log('error', 'Error update buttons: ', error)
+								log('error', 'Error update buttons: ' + error)
 							}
 						});
 					});
@@ -119,3 +125,8 @@ RequestManagerMaker.TelegramManager.prototype.postData = function(channel_id, da
 
 
 module.exports = RequestManagerMaker;
+
+function log(level, message) {
+  // TODO: Need to create a global method with a enum of message groups
+  winston.log(level, colors.cyan("RequestManager"), message)
+}

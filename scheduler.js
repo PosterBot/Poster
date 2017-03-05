@@ -92,28 +92,22 @@ module.exports = function(){
 			for (key in channelsList){
 				var settings = channelsList[key],
 					times = settings.times;
-				log('info', key)
+				log('info', "Start timer for telegram channel - " + colors.green(key))
 
-				function getPostFunction(key, settings){
-					var post = function(){
-						var data = fileManager.readStringFromFile(settings.filePath);
-						log('info', data)
-
-						if (data){
-
-							var newData = dataParser.parsePostString(data, settings.type);
-							var request = telegramRequestManager.postData(key, newData, settings.type)
+				var post = function(key, settings){
+					provider.getPublication(provider.API.telegram, "testChannelJem" ,function(publication) {
+						log('info', "Publication: " + publication)
+						if (publication){
+							var request = telegramRequestManager.postData(key, publication, settings.type)
 						}
-
-					}
-					return post
+					});
 				}
-				var post = getPostFunction(key, settings);
+
 				for(var i = 0; i < times.length; i++){
 					var time = parseTimeToCron(settings.times[i], '0-6');
-					log('data', settings.times[i])
+					log('data', settings.times[i]);
 					var task = schedule.scheduleJob(time, post);
-					jobs.push(task);
+					jobs.push(post(key, settings));
 				}
 			}
 
