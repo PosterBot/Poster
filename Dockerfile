@@ -7,6 +7,11 @@ COPY package.json /usr/src/posterBot/
 RUN npm install
 COPY . /usr/src/posterBot
 
+COPY settings/templates/firebase.json /data/
+
 # EXPOSE 8080
 
 CMD ["npm", "start"]
+
+# Configure PosterBot
+VOLUME ["/data"]

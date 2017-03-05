@@ -15,14 +15,13 @@ Docker
 ------
 
 ```
-  $ docker build -t posterbot .
-  $ docker run -d posterbot
+  $ docker run -v <SOME_DIR>:/data -d posterbot/poster
 ```
 
 Configure
 ---------
 Сервер работает через Firebase. Для подключения к firebase укажите настройки в файле
-`./settings/local_settings/firebase.json`:
+`/data/firebase.json`:
 
 ```
 {

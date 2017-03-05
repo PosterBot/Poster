@@ -8,7 +8,7 @@ var firebase = require('firebase'),
     require("firebase/database");
 
 function settings() {
-  var settingsURL = "./settings/local_settings/firebase.json";
+  var settingsURL = "/data/firebase.json";
   var settings = fileManager.readDataFromJson(settingsURL);
 
   if (settings && settings.settings) {
