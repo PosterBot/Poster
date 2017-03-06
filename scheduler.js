@@ -25,27 +25,17 @@ module.exports = function(){
 
 	return {
 		setPostTimer: function(publicsSettings){
+			for( key in publicsSettings){
+				var settings = channelsList[key],
+						times = settings.times;
+				log('info', "Start timer for vkontakte channel - " + colors.green(key))
 
-			for( publicItem in publicsSettings){
-				var settings = publicsSettings[publicItem];
-				log('info', settings.publicId);
-				for(var i = 0; i < settings.times.length; i++){
-					var time = parseTimeToCron(settings.times[i], '0-6');
-					log('data', settings.times[i])
-					var task = schedule.scheduleJob(time, function(){
-							var postData = fileManager.readStringFromFile(settings.filePath),
-								requestData;
-							if(postData){
-								requestData = dataParser.parsePostString(postData, settings.type);
-								if(requestData){
-									vkReuqestManager.postData(requestData, settings.publicId);
-								}
-							}
+				this.cancelJobs(key);
+				var post = this.getPostFunction(key, false);
 
-						})
-					jobs.push(task)
-				}
-
+				settings.times.forEach(function(time) {
+					appendJob(key, time, post);
+				});
 			}
 		},
 		setContentGrabberTimer: function(settings){
@@ -90,16 +80,22 @@ module.exports = function(){
 		},
 		getPostFunction: function(key, type){
 			log('data', 'Create method for ' + colors.green(key) + ' with type - ' + colors.green(type))
-			var key = key, type = type;
 			var post = function(){
 				provider.getPublication(provider.API.telegram, key ,function(publication) {
 					log('data', 'Get publication for ' + colors.green(key) + ' with type - ' + colors.green(type))
 					log('data', "Publication: \"" + colors.gray(publication.val()) +"\"")
+
+					var callback = function() {
+						// Callback method
+						provider.removePublication(provider.API.telegram, key, publication.key)
+					}
+
 					if (publication.val()){
-						var request = telegramRequestManager.postData(key, publication.val(), type, function() {
-							// Callback method
-							provider.removePublication(provider.API.telegram, key, publication.key)
-						})
+						if (type) {
+							telegramRequestManager.postData(key, publication.val(), type, callback)
+						} else {
+							vkReuqestManager.postData(key, publication.val(), callback);
+						}
 					}
 				});
 			}
@@ -112,30 +108,33 @@ module.exports = function(){
 				log('info', "Start timer for telegram channel - " + colors.green(key))
 
 				var post = this.getPostFunction(key, settings.type);
-				// TODO: Clear previous tasks for channel
 
-				var currentJobs = jobs[key];
-				if (currentJobs) {
-					log('info', currentJobs.length + ' jobs of ' + colors.green(key) + ' to cancel')
-					while (currentJobs.length > 0) {
-						currentJobs.pop().cancel();
-					}
-				} else {
-					jobs[key] = [];
-				}
-
-
+				this.cancelJobs(key);
 				settings.times.forEach(function(time) {
-					var cron = parseTimeToCron(time, '0-6');
-					log('data', "Cron time " + colors.cyan(time) + ' → ' + colors.gray(cron));
-					var task = schedule.scheduleJob(cron, post);
-					jobs[key].push(task);
+					appendJob(key, time, post);
 				});
 			}
 
 		},
 		listJobsCount: function(){
 			log('info', 'Tasks amount ' + jobs.length)
+		},
+		cancelJobs: function (key) {
+			var currentJobs = jobs[key];
+			if (currentJobs) {
+				log('info', currentJobs.length + ' jobs of ' + colors.green(key) + ' to cancel')
+				while (currentJobs.length > 0) {
+					currentJobs.pop().cancel();
+				}
+			} else {
+				jobs[key] = [];
+			}
+		},
+		appendJob: function (key, time, task) {
+			var cron = parseTimeToCron(time, '0-6');
+			log('data', "Cron time " + colors.cyan(time) + ' → ' + colors.gray(cron));
+			var job = schedule.scheduleJob(cron, task);
+			jobs[key].push(job);
 		}
 	}
 

@@ -66,10 +66,22 @@ RequestManagerMaker.TelegramManager = function(settings){
 	this.googleUrl = new GoogleURL( { key: settings.googleApiKey });
 }
 
-RequestManagerMaker.VkManager.prototype.postData = function(post, publicId){
-	var propertiesObject = { owner_id:'-' + publicId, access_token:this.token, from_group: this.postFromGroup, message: post.message, attachment: post.link };
+RequestManagerMaker.VkManager.prototype.postData = function(channel_id, data, callback){
+	logChannel('info', channel_id, 'Post vkontakte data \"' + colors.gray(data) + '\"')
+	var propertiesObject = {
+		owner_id:'-' + channel_id,
+		access_token:this.token,
+		from_group: this.postFromGroup,
+		message: data
+		//,attachment: data.link
+	};
 	request({url:this.host, qs:propertiesObject}, function(err, response, body) {
-		console.log(response.statusCode + ' - ' + post.link)
+		if (error) {
+			logChannel('error', channel_id, err)
+		} else {
+			logChannel('data', channel_id, body)
+			callback();
+		}
 	})
 }
 
@@ -89,8 +101,8 @@ RequestManagerMaker.TelegramManager.prototype.postData = function(channel_id, da
 					logChannel('error', channel_id, body)
 					return
 				} else {
-					callback();
 					logChannel('data', channel_id, body)
+					callback();
 				}
 
 				var shareLink = 'https://t.me/' + body.result.chat.username + '/' + body.result.message_id
