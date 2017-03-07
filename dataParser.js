@@ -1,10 +1,11 @@
 var constants = require('./constants'),
 	_ = require('lodash'),
-	shuffle = require('lodash.shuffle');
+	shuffle = require('lodash.shuffle'),
+	winston = require('winston');
 
 var jsdom = require('jsdom').jsdom,
-	myWindow = jsdom().defaultView, 
-	$ = require('jQuery')(myWindow);
+	myWindow = jsdom().defaultView,
+	$ = require('jquery')(myWindow);
 
 module.exports = {
 	parsePostString: function(postData, postType){
@@ -24,7 +25,7 @@ module.exports = {
 		return result;
 	},
 	parseTitles: function(body, titles){
-		console.log($(body).find('.content_left.search-page .post__title_link'));
+		winston.log('info', $(body).find('.content_left.search-page .post__title_link'));
 		var items = $(body).find('.post__title_link');
 		items = _.map(items,function(el){return $(el).attr('href')});
 		var newPosts = _.difference(items,titles);
@@ -48,7 +49,7 @@ module.exports = {
     }
 
     var lastIndex = $a.index(lastEl);
-	console.log(lastIndex)
+		winston.log('info', lastIndex)
     $body.find('.post__body_full li a').each(function() {
         var elementOffset = $(this);
         if ($a.index(elementOffset) < lastIndex) {
