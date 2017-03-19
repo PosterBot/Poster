@@ -1,0 +1,66 @@
+<div class="projects">
+    <div class="project-settings">
+    <div class="table-header">
+        <div class="name-header">
+            Name
+        </div>
+        <div class="main-header">
+            {{currentProject.title || ''}}
+            <div class="content">Content</div>
+            <div class="settings">Settings</div>
+        </div>
+    </div>
+    <div class="table-content">
+
+        <div class="projects-list">
+            <h3>Projects</h4>
+            <h4>Telegram</h4>
+            <ul ng-repeat="project in vm.projects.telegram">
+                <li ng-click="vm.setActiveProject(project)">{{project.name}}</li>
+            </ul>
+            <h4>Vk</h4>
+            <ul ng-repeat="project in vm.projects.vk">
+                <li ng-click="vm.setActiveProject(project)">{{project.name}}</li>
+            </ul>
+            <h4>Other</h4>
+        </div>
+        <div class="project-info">
+            <channel-stat></channel-stat>
+            <input type="file" on-read-file="vm.showContent($fileContent)">Add from File</div>
+            <div>
+                <h2>File content is:</h2>
+                <pre>{{ vm.content }}</pre>
+            </div>
+            <div class="posts-list">
+                <table class="table">
+                    <caption>Channel Posts</caption>
+                    <thead>
+                        <tr>
+                            <th> # </th>
+                            <th>time</th>
+                            <th>Link</th>
+                            <th>Text</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr> 
+                            <th scope="row"></th>
+                            <td>1232</td>
+                            <td><input type="text" ng-model="vm.postModel.text"/></td> 
+                            <td><input type="text" ng-model="vm.postModel.link"></td>
+                            <td><div class="btn btn-default" ng-click="vm.addPost()">Add</div></td>
+                        </tr>
+                        <tr ng-repeat="post in vm.currentProject.content track by $index"> 
+                            <th scope="row">{{$index +1}}</th> 
+                            <td>data</td> 
+                            <td>{{post.link}}</td> 
+                            <td>1232</td> 
+                        </tr>
+                    <tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

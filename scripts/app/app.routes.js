@@ -9,18 +9,18 @@
 
 		$stateProvider
 			.state('login', {
-				url: '/projects',
-				templateUrl: 'app/pages/projects/projects.html',
-				controller: 'projectsCtrl',
+				url: '/login',
+				templateUrl: 'app/pages/login/login.html',
+				controller: 'loginController',
 				controllerAs: 'vm',
-				title: 'Projects List'
+				title: 'Login'
 			})
 			.state('projects', {
-				url: '/newProject',
-				templateUrl: 'app/pages/newProject/newProject.html',
-				controller: 'newProjectCtrl',
+				url: '/',
+				templateUrl: 'app/pages/projects/projects.html',
+				controller: 'projectsController',
 				controllerAs: 'vm',
-				title: 'New Project'
+				title: 'Projects'
 			});
 
 		$urlRouterProvider.otherwise('/projects');
