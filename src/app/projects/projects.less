@@ -1,48 +1,36 @@
 .project-settings{
-    border: 1px black solid;
-    margin: 0 auto;
+    padding-top: 10px;
 }
-
-.table-header{
-        line-height: 40px;
-        border-bottom: 1px black solid;
-    }
-
-    .main-header{
-            display: inline-block;
-            float:right;
-            .settings, .content{
-                display: inline-block;
-                width:50px;
-                color: red;
-            }
-        }
-
-    .name-header, .projects-list{
-            padding: 5px;
-            display: inline-block;
-            width:250px;
-            border-right: 1px black solid;
-        }
 
 .projects-list {
-    display: table-cell;
-    ul {
+    .list-item{
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+        border-bottom: 1px #ddd solid;
+        color: #337ab7;
+    }
+
+    ul{
         padding-left:5px;
+
         li{
-            list-style-type: none;
+            list-style: none;
         }
     }
 }
-.table-content{
-    display: table-row;
-}
-.project-info{
-    margin-left:260px;
-    display: table-cell;
 
-    .posts-list{
-        padding: 10px;
-        width:400px;
+.posts-list{
+    padding-top: 10px;
+    caption{
+        padding-left:10px;
     }
+}
+
+.import-file, .import-content{
+    padding-top:10px;
+}
+
+.save-import{
+    margin-top:20px;
+    float: right;
 }

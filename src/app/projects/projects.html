@@ -1,64 +1,88 @@
-<div class="projects">
-    <div class="project-settings">
-    <div class="table-header">
-        <div class="name-header">
-            Name
-        </div>
-        <div class="main-header">
-            {{currentProject.title || ''}}
-            <div class="content">Content</div>
-            <div class="settings">Settings</div>
-        </div>
-    </div>
-    <div class="table-content">
-
-        <div class="projects-list">
-            <h3>Projects</h4>
-            <h4>Telegram</h4>
-            <ul ng-repeat="project in vm.projects.telegram">
-                <li ng-click="vm.setActiveProject(project)">{{project.name}}</li>
-            </ul>
-            <h4>Vk</h4>
-            <ul ng-repeat="project in vm.projects.vk">
-                <li ng-click="vm.setActiveProject(project)">{{project.name}}</li>
-            </ul>
-            <h4>Other</h4>
-        </div>
-        <div class="project-info">
-            <channel-stat></channel-stat>
-            <input type="file" on-read-file="vm.showContent($fileContent)">Add from File</div>
-            <div>
-                <h2>File content is:</h2>
-                <pre>{{ vm.content }}</pre>
+<div class="projects container">
+    <div class="project-settings row">
+        <div class="left-panel col-sm-3 col-xs-12">
+            <div class="panel panel-default">
+                <div class="name-header panel-heading">
+                    <h4>Projects</h4>
+                </div>
+                <div class="projects-list panel-body">
+                    <div class="list-item">Telegram</div>
+                    <ul ng-repeat="project in vm.projects.telegram">
+                        <li ng-click="vm.setActiveProject(project)">{{project.name}}</li>
+                    </ul>
+                    <div class="list-item">Vk</div>
+                    <ul ng-repeat="project in vm.projects.vk">
+                        <li ng-click="vm.setActiveProject(project)">{{project.name}}</li>
+                    </ul>
+                    <div class="list-item">Other</div>
+                </div>
             </div>
-            <div class="posts-list">
-                <table class="table">
-                    <caption>Channel Posts</caption>
-                    <thead>
-                        <tr>
-                            <th> # </th>
-                            <th>time</th>
-                            <th>Link</th>
-                            <th>Text</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr> 
-                            <th scope="row"></th>
-                            <td>1232</td>
-                            <td><input type="text" ng-model="vm.postModel.text"/></td> 
-                            <td><input type="text" ng-model="vm.postModel.link"></td>
-                            <td><div class="btn btn-default" ng-click="vm.addPost()">Add</div></td>
-                        </tr>
-                        <tr ng-repeat="post in vm.currentProject.content track by $index"> 
-                            <th scope="row">{{$index +1}}</th> 
-                            <td>data</td> 
-                            <td>{{post.link}}</td> 
-                            <td>1232</td> 
-                        </tr>
-                    <tbody>
-                </table>
+        </div>
+
+        <div class="content  col-sm-9 col-xs-12">
+            <div class="panel panel-default">
+                <div class="main-header panel-heading">
+                    {{vm.currentProject.title || ''}}
+                    <div class="btn btn-primary content">Content</div>
+                    <div class="btn btn-primary settings">Settings</div>
+                </div>
+                <div class="panel-body">
+
+                    <div class="project-info ">
+                        <channel-stat></channel-stat>
+                    </div>
+                    <ul class="nav nav-tabs">
+                        <li role="presentation" ng-class="vm.activeTab=='edit' ? 'active' : ''"><a ng-click="vm.activeTab='edit'" href=''>Edit Content</a></li>
+                        <li role="presentation" ng-class="vm.activeTab=='import' ? 'active' : ''"><a ng-click="vm.activeTab='import'" href=''>Import Content</a></li>
+                        <li role="presentation" ng-class="vm.activeTab=='time' ? 'active' : ''"><a ng-click="vm.activeTab='time'" href=''>Time Settings</a></li>
+                    </ul>
+
+                    <div class="import-file" ng-show="vm.activeTab =='import'">
+                        <p> Load data from txt file </p>
+                        <input type="file" accept=".txt" on-read-file="vm.showContent($fileContent)">
+                        <div class="import-content">
+                            Import content
+                            <textarea class="form-control" rows="10" ng-model="vm.content"></textarea>
+                            <button type="button" 
+                                    class="btn btn-primary save-import" 
+                                    ng-click="vm.saveImportData()"
+                                    ng-disabled="!vm.content.length">Parse & Save</button>
+                        </div>
+                    </div>
+
+
+                    <div class="posts-list" ng-show="vm.activeTab =='edit'">
+                        <table class="table">
+                            <caption>Posts <span class="badge">{{vm.currentProject.content.length}}</span></caption>
+                            <thead>
+                                <tr>
+                                    <th> # </th>
+                                    <th>time</th>
+                                    <th>Link</th>
+                                    <th>Text</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td>1232</td>
+                                    <td><input type="text" ng-model="vm.postModel.text" /></td>
+                                    <td><input type="text" ng-model="vm.postModel.link"></td>
+                                    <td>
+                                        <div class="btn btn-default" ng-click="vm.addPost()">Add</div>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="post in vm.currentProject.content track by $index">
+                                    <th scope="row">{{$index +1}}</th>
+                                    <td>time</td>
+                                    <td>{{post.link}}</td>
+                                    <td>{{post.message}}</td>
+                                </tr>
+                                <tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
