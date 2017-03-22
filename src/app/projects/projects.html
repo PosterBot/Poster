@@ -22,9 +22,7 @@
         <div class="content  col-sm-9 col-xs-12">
             <div class="panel panel-default">
                 <div class="main-header panel-heading">
-                    {{vm.currentProject.title || ''}}
-                    <div class="btn btn-primary content">Content</div>
-                    <div class="btn btn-primary settings">Settings</div>
+                    <h4>{{vm.currentProject.name || ''}} </h4>
                 </div>
                 <div class="panel-body">
 
@@ -76,8 +74,14 @@
                                 <tr ng-repeat="post in vm.currentProject.content track by $index">
                                     <th scope="row">{{$index +1}}</th>
                                     <td>time</td>
-                                    <td>{{post.link}}</td>
-                                    <td>{{post.message}}</td>
+                                    <td><input ng-if="post.editMode" type="text" ng-model="post.link" /><p ng-if="!post.editMode">{{post.link}}</p></td>
+                                    <td><input ng-if="post.editMode" type="text" ng-model="post.message" /><p ng-if="!post.editMode">{{post.message}}</p></td>
+                                    <td>
+                                        <div ng-if="post.editMode" class="btn btn-default" ng-click="vm.savePost(post)"><span class="glyphicon glyphicon-ok"></span></div>
+                                        <div ng-if="!post.editMode" class="btn btn-default" ng-click="vm.editPost(post, true)"><span class="glyphicon glyphicon-pencil"></span></div>
+                                        <div ng-if="!post.editMode" class="btn btn-default" ng-click="vm.deletePost(post)"><span class="glyphicon glyphicon-remove"></span></div>
+                                        <div ng-if="post.editMode" class="btn btn-default" ng-click="vm.editPost(post, false)"><span class="glyphicon glyphicon-repeat"></span></div>
+                                    </td>
                                 </tr>
                                 <tbody>
                         </table>

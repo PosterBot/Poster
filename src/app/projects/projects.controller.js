@@ -8,10 +8,13 @@
                 firebaseSettings,
                 baseObject,
                 data;
+
+
             vm.projects = {
-                vk: [],
-                telegram: []
+                vk: {},
+                telegram: {}
             };
+
             vm.postModel = {
                 text: '',
                 link: ''
@@ -19,61 +22,70 @@
             vm.content = ''
             vm.activeTab = 'edit';
 
-            function init() {
-                firebaseService.init().then(function (reference) {
-                    baseObject = $firebaseObject(reference);
-                    baseObject.$loaded()
-                        .then(function () {
-                            console.log(baseObject);
-                            if (baseObject.settings && baseObject.settings.channels) {
-                                if (baseObject.settings.channels.telegram) {
-                                    $.map(baseObject.settings.channels.telegram, function (value, key) {
-                                        var item = { name: key, params: value }
-                                        if (baseObject.content && baseObject.content.telegram && baseObject.content.telegram[key]) {
-                                            var content = []
-                                            $.map(baseObject.content.telegram[key], function (baseObject) {
-                                                var dataList = baseObject.split(' ');
-                                                var result = {
-                                                    link: dataList.splice(0, 1)[0],
-                                                    message: dataList.join(' ')
-                                                };
+            function bindEvents(projectsType, key) {
+                var contentRef = baseObject.$ref().child('content/' + projectsType + '/' + key);
+                contentRef.on('child_added', function (data) {
+                    var contentItem = data.val().split(' ');
+                    
+                    vm.projects[projectsType][key]['content'][data.getKey()] = {
+                            link: contentItem.splice(0, 1)[0],
+                            message: contentItem.join(' '),
+                            key: data.getKey()
+                        }
+                    console.log(data.getKey(), projectsType, key) ;
+                });
+                contentRef.on('child_changed', function (data) {
+                    var contentItem = data.val().split(' ');
 
-                                                content.push(result);
-                                            });
-                                            item.content = content
-                                        }
-                                        vm.projects.telegram.push(item)
-                                    })
-                                }
-                                if (baseObject.settings.channels.vk) {
-                                    $.map(baseObject.settings.channels.vk, function (value, key) {
-                                        var item = { name: key, params: value }
-                                        if (baseObject.content && baseObject.content.vk && baseObject.content.vk[key]) {
-                                            var content = []
-                                            $.map(baseObject.content.vk[key], function (baseObject) {
-                                                var dataList = baseObject.split(' ');
-                                                var result = {
-                                                    link: dataList.splice(0, 1)[0],
-                                                    message: dataList.join(' ')
-                                                };
+                    vm.projects[projectsType][key]['content'][data.getKey()] = {
+                            link: contentItem.splice(0, 1)[0],
+                            message: contentItem.join(' ')
+                        }
+                    console.log(data.getKey(), projectsType, key) ;
+                });
 
-                                                content.push(result);
-                                            });
-                                            item.content = content
-                                        }
-                                        vm.projects.vk.push(item)
-                                    })
-                                }
+                contentRef.on('child_removed', function (data) {
+                    delete vm.projects[projectsType][key]['content'][data.getKey()]
+                    console.log(data.getKey(), projectsType, key) ; 
+                });
+            }
 
-                                vm.setActiveProject(vm.projects.telegram[0]);
+            function getProjectData(baseObject, projectsType) {
+                var settings = baseObject.settings,
+                    content = baseObject.content;
 
-
-                            }
-                        })
-                        .catch(function (err) {
-                            console.error(err);
-                        });
+                _.forEach(settings.channels[projectsType], function (value, key) {
+                    var item = { name: key, params: value, type: projectsType, editMode: false, content: {} }
+                    vm.projects[projectsType][key] = item;
+                    bindEvents(projectsType, key);
                 })
+
+            }
+
+
+            function firebaseInitCallback(reference) {
+                baseObject = $firebaseObject(reference);
+                baseObject.$loaded()
+                    .then(function () {
+                        console.log(baseObject);
+                        if (baseObject.settings && baseObject.settings.channels) {
+                            if (baseObject.settings.channels.telegram) {
+                                getProjectData(baseObject, 'telegram')
+                            }
+                            if (baseObject.settings.channels.vk) {
+                                getProjectData(baseObject, 'vk')
+                            }
+
+                            vm.setActiveProject(vm.projects.telegram['testChannelJem']);
+                        }
+                    })
+                    .catch(function (err) {
+                        console.error(err);
+                    });
+            }
+
+            function init() {
+                firebaseService.init().then(firebaseInitCallback)
             }
 
             init();
@@ -85,24 +97,45 @@
             }
 
             vm.addPost = function () {
-                if (!vm.currentProject.content) {
-                    vm.currentProject.content = [];
-                }
-                baseObject.content.telegram.testChannelJem[123] = vm.postModel.text + ' ' + vm.postModel.link;
-                baseObject.$save().then(function (data) {
-                    vm.currentProject.content.push(vm.postModel.text + ' ' + vm.postModel.link);
-                    vm.postModel.text = '';
-                    vm.postModel.link = ''
-                })
+                var item = baseObject.$ref();
+                item.child('content/' + vm.currentProject.type + '/' + vm.currentProject.name).push(vm.postModel.text + ' ' + vm.postModel.link)
+                vm.postModel.text = '';
+                vm.postModel.link = ''
             }
 
             vm.saveImportData = function () {
-
+                var item = baseObject.$ref();
+                var child = item.child('content/' + vm.currentProject.type + '/' + vm.currentProject.name);
+                var contentData = vm.content.split('\n');
+                _.forEach(contentData, function(el){
+                    if(el.length > 0){
+                        child.push(el);
+                    }
+                    
+                })
+                vm.content = '';
             }
 
             vm.showContent = function ($fileContent) {
                 vm.content = $fileContent;
             };
+
+            vm.editPost= function(post, flag){
+                post.editMode = !!flag;
+            }
+
+            vm.savePost = function(post){
+                var item = baseObject.$ref();
+                item.child('content/' + vm.currentProject.type + '/' + vm.currentProject.name + '/' + post.key).set(post.text + ' ' + post.link );
+                post.editMode = false;
+                console.log(post)
+            }
+
+            vm.deletePost = function(post){
+                var item = baseObject.$ref();
+                item.child('content/' + vm.currentProject.type + '/' + vm.currentProject.name + '/' + post.key).remove();
+                console.log(post)
+            }
 
         }]);
 

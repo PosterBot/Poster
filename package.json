@@ -1,7 +1,9 @@
 {
   "name": "angularPoster",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "angular-uuid": "0.0.4"
+  },
   "scripts": {
     "test": "gulp test"
   },
