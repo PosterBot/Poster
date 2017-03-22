@@ -22,7 +22,7 @@
             vm.content = ''
             vm.activeTab = 'edit';
 
-            function bindEvents(projectsType, key) {
+            function bindEventsContent(projectsType, key) {
                 var contentRef = baseObject.$ref().child('content/' + projectsType + '/' + key);
                 contentRef.on('child_added', function (data) {
                     var contentItem = data.val().split(' ');
@@ -49,6 +49,23 @@
                     console.log(data.getKey(), projectsType, key) ; 
                 });
             }
+			
+			function bindEventsSettings(projectsType, key) {
+                var contentRef = baseObject.$ref().child('settings/channels/' + projectsType + '/' + key );
+                contentRef.on('child_added', function (data) {
+					vm.projects[projectsType][key]['params']['times'] = data.val();
+                    console.log(data.getKey(), data.val(), projectsType, key) ;
+                });
+                contentRef.on('child_changed', function (data) {
+					vm.projects[projectsType][key]['params']['times'] = data.val();
+                    console.log(data.getKey(), data.val(), projectsType, key) ;
+                });
+
+                contentRef.on('child_removed', function (data) {
+					vm.projects[projectsType][key]['params']['times'] = data.val();
+                    console.log(data.getKey(), data.val(), projectsType, key) ;
+                });
+            }
 
             function getProjectData(baseObject, projectsType) {
                 var settings = baseObject.settings,
@@ -57,7 +74,8 @@
                 _.forEach(settings.channels[projectsType], function (value, key) {
                     var item = { name: key, params: value, type: projectsType, editMode: false, content: {} }
                     vm.projects[projectsType][key] = item;
-                    bindEvents(projectsType, key);
+                    bindEventsContent(projectsType, key);
+					bindEventsSettings(projectsType, key)
                 })
 
             }
@@ -97,7 +115,7 @@
             }
 			
 			vm.getPostsCount = function(){
-				return vm.currentProject.content ? Object.keys(vm.currentProject.content).length : ''
+				return vm.currentProject && vm.currentProject.content ? Object.keys(vm.currentProject.content).length : ''
 			}
 			
             vm.addPost = function () {

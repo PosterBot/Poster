@@ -88,6 +88,40 @@
                         </table>
 						</div>
                     </div>
+					
+					
+					<div class="posts-list row" ng-show="vm.activeTab =='time'">
+					<div class="col-xs-12">
+                        <table class="table">
+                            <caption>Times <span class="badge">{{123}}</span></caption>
+                            <thead>
+                                <tr>
+                                    <th class="col-xs-1"> # </th>
+                                    <th class="col-xs-7">Time</th>
+                                    <th class="col-xs-4">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td><input type="text" ng-model="vm.timeModel" /></td>
+                                    <td>
+                                        <div class="btn btn-default" ng-click="vm.addTime()">Add</div>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="time in vm.currentProject.params.times track by $index">
+                                    <th scope="row">{{$index +1}}</th>
+                                    <td>{{time}}</td>
+ 
+                                    <td>
+                                        <div class="btn btn-default" ng-click="vm.editTime(post, false)"><span class="glyphicon glyphicon-repeat"></span></div>
+                                    </td>
+                                </tr>
+                                <tbody>
+                        </table>
+						</div>
+                    </div>
+					
                 </div>
             </div>
         </div>
