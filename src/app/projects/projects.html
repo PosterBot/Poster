@@ -49,16 +49,17 @@
                     </div>
 
 
-                    <div class="posts-list" ng-show="vm.activeTab =='edit'">
+                    <div class="posts-list row" ng-show="vm.activeTab =='edit'">
+					<div class="col-xs-12">
                         <table class="table">
-                            <caption>Posts <span class="badge">{{vm.currentProject.content.length}}</span></caption>
+                            <caption>Posts <span class="badge">{{vm.getPostsCount()}}</span></caption>
                             <thead>
                                 <tr>
-                                    <th> # </th>
-                                    <th>time</th>
-                                    <th>Link</th>
-                                    <th>Text</th>
-                                    <th>Actions</th>
+                                    <th class="col-xs-1"> # </th>
+                                    <th class="col-xs-1">time</th>
+                                    <th class="col-xs-4">Link</th>
+                                    <th class="col-xs-4">Text</th>
+                                    <th class="col-xs-2">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -85,6 +86,7 @@
                                 </tr>
                                 <tbody>
                         </table>
+						</div>
                     </div>
                 </div>
             </div>

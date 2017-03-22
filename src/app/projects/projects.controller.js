@@ -95,7 +95,11 @@
                     vm.currentProject = project;
                 }
             }
-
+			
+			vm.getPostsCount = function(){
+				return vm.currentProject.content ? Object.keys(vm.currentProject.content).length : ''
+			}
+			
             vm.addPost = function () {
                 var item = baseObject.$ref();
                 item.child('content/' + vm.currentProject.type + '/' + vm.currentProject.name).push(vm.postModel.text + ' ' + vm.postModel.link)
