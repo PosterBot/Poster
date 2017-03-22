@@ -114,8 +114,8 @@
                 }
             }
 			
-			vm.getPostsCount = function(){
-				return vm.currentProject && vm.currentProject.content ? Object.keys(vm.currentProject.content).length : ''
+			vm.getDataCount = function(list){
+				return list ? Object.keys(list).length : ''
 			}
 			
             vm.addPost = function () {

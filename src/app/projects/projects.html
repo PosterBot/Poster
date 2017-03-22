@@ -52,7 +52,7 @@
                     <div class="posts-list row" ng-show="vm.activeTab =='edit'">
 					<div class="col-xs-12">
                         <table class="table">
-                            <caption>Posts <span class="badge">{{vm.getPostsCount()}}</span></caption>
+                            <caption>Posts <span class="badge">{{vm.getDataCount(vm.currentProject.content)}}</span></caption>
                             <thead>
                                 <tr>
                                     <th class="col-xs-1"> # </th>
@@ -93,7 +93,7 @@
 					<div class="posts-list row" ng-show="vm.activeTab =='time'">
 					<div class="col-xs-12">
                         <table class="table">
-                            <caption>Times <span class="badge">{{123}}</span></caption>
+                            <caption>Times <span class="badge">{{vm.getDataCount(vm.currentProject.params.times)}}</span></caption>
                             <thead>
                                 <tr>
                                     <th class="col-xs-1"> # </th>
