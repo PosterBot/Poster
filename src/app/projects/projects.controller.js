@@ -19,6 +19,7 @@
                 text: '',
                 link: ''
             }
+			vm.timeModel = new Date();
             vm.content = ''
             vm.activeTab = 'edit';
 
@@ -57,7 +58,8 @@
                     var dataSettings = {}
                     _.forEach(data, function(value, key){
                         if(value.toString().match(timePattern)){
-                            dataSettings[key] = value;
+                            dataSettings[key] = {time: value,
+												key: key};
                         }
                     })
                     return dataSettings;
@@ -125,6 +127,10 @@
                 }
             }
 			
+			vm.checkValidTime = function(){
+				
+			}
+			
 			vm.getDataCount = function(list){
 				return list ? Object.keys(list).length : ''
 			}
@@ -152,6 +158,24 @@
             vm.showContent = function ($fileContent) {
                 vm.content = $fileContent;
             };
+
+			vm.saveTime = function(time){
+				var item = baseObject.$ref();
+                item.child('settings/channels/' + vm.currentProject.type + '/' + vm.currentProject.name + '/times/' + time.key).set(time.time );
+                time.editMode = false;
+                console.log(time)
+			}
+			
+			vm.deleteTime = function(time){
+                var item = baseObject.$ref();
+                item.child('settings/channels/' + vm.currentProject.type + '/' + vm.currentProject.name + '/times/' + time.key).remove();
+                console.log(time)
+            }
+			
+			vm.editTime = function(time, flag){
+				time.editMode = !!flag;
+            }
+			
 
             vm.editPost= function(post, flag){
                 post.editMode = !!flag;

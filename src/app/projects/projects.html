@@ -104,17 +104,20 @@
                             <tbody>
                                 <tr>
                                     <th scope="row"></th>
-                                    <td><input type="text" ng-model="vm.timeModel" /></td>
+									<td><div uib-timepicker ng-model="vm.timeModel" ng-change="vm.checkValidTime()" hour-step="1" minute-step="1" show-meridian="false"></div></td>
                                     <td>
-                                        <div class="btn btn-default" ng-click="vm.addTime()">Add</div>
+                                        <div class="btn btn-default" ng-click="vm.addTime()" ng-disabled="!timeIsValid">Add</div>
                                     </td>
                                 </tr>
                                 <tr ng-repeat="time in vm.currentProject.params.times track by $index">
                                     <th scope="row">{{$index +1}}</th>
-                                    <td>{{time}}</td>
+                                    <td>{{time.time}}</td>
  
                                     <td>
-                                        <div class="btn btn-default" ng-click="vm.editTime(post, false)"><span class="glyphicon glyphicon-repeat"></span></div>
+										<div ng-if="time.editMode" class="btn btn-default" ng-click="vm.saveTime(time)"><span class="glyphicon glyphicon-ok"></span></div>
+										<div ng-if="time.editMode" class="btn btn-default" ng-click="vm.editPost(time, false)"><span class="glyphicon glyphicon-repeat"></span></div>
+                                        <div ng-if="!time.editMode" class="btn btn-default" ng-click="vm.editTime(time, true)"><span class="glyphicon glyphicon-pencil"></span></div>
+										<div ng-if="!time.editMode" class="btn btn-default" ng-click="vm.deleteTime(time)"><span class="glyphicon glyphicon-remove"></span></div>
                                     </td>
                                 </tr>
                                 <tbody>
