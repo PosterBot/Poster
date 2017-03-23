@@ -31,13 +31,17 @@
     padding-top: 10px;
     height: 650px;
     overflow-y: auto;
-    div{
-        overflow-x: hidden;
-    }
     caption{
         padding-left:10px;
     }
+    .edit-time-button{
+        margin-top: 35px;
+    }
 }
+
+.posts-list > div{
+        overflow-x: hidden;
+    }
 
 .import-file, .import-content{
     padding-top:10px;
@@ -64,7 +68,10 @@ td {
         bottom: 0;
         .spinner {
             position: absolute;
+            width: 50px;
+            height: 55px;
             top: 50%;
+            font-size: 50px;
             left: 50%;
             display: inline-block;
             animation: spin 2s infinite linear
@@ -83,4 +90,17 @@ td {
         height:800px;
     }
 }
+
+@-moz-keyframes spin {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+    from { -webkit-transform: rotate(0deg); }
+    to { -webkit-transform: rotate(360deg); }
+}
+@keyframes spin {
+    from {transform:rotate(0deg);}
+    to {transform:rotate(360deg);}
+}       
 

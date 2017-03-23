@@ -56,16 +56,14 @@
                             <thead>
                                 <tr>
                                     <th class="col-xs-1"> # </th>
-                                    <th class="col-xs-1">time</th>
                                     <th class="col-xs-4">Link</th>
-                                    <th class="col-xs-4">Text</th>
+                                    <th class="col-xs-5">Text</th>
                                     <th class="col-xs-2">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <th scope="row"></th>
-                                    <td>time</td>
                                     <td><input type="text" ng-model="vm.postModel.text" /></td>
                                     <td><input type="text" ng-model="vm.postModel.link"></td>
                                     <td>
@@ -74,7 +72,6 @@
                                 </tr>
                                 <tr ng-repeat="post in vm.currentProject.content track by $index">
                                     <th scope="row">{{$index +1}}</th>
-                                    <td>time</td>
                                     <td><input ng-if="post.editMode" type="text" ng-model="post.link" /><p ng-if="!post.editMode">{{post.link}}</p></td>
                                     <td><input ng-if="post.editMode" type="text" ng-model="post.message" /><p ng-if="!post.editMode">{{post.message}}</p></td>
                                     <td>
@@ -106,18 +103,16 @@
                                     <th scope="row"></th>
 									<td><div uib-timepicker ng-model="vm.timeModel" hour-step="1" minute-step="1" show-meridian="false"></div></td>
                                     <td>
-                                        <div class="btn btn-default" ng-click="vm.addTime()" ng-disabled="vm.timeModel == null">Add</div>
+                                        <div class="btn btn-default edit-time-button" ng-click="vm.addTime()" ng-disabled="vm.timeModel == null">Add</div>
                                     </td>
                                 </tr>
                                 <tr ng-repeat="time in vm.currentProject.params.times track by $index">
                                     <th scope="row">{{$index +1}}</th>
-                                    <td>{{time.time}}</td>
+                                    <td>
+                                        <p>{{time.time}}</p></td>
  
                                     <td>
-										<div ng-if="time.editMode" class="btn btn-default" ng-click="vm.saveTime(time)"><span class="glyphicon glyphicon-ok"></span></div>
-										<div ng-if="time.editMode" class="btn btn-default" ng-click="vm.editPost(time, false)"><span class="glyphicon glyphicon-repeat"></span></div>
-                                        <div ng-if="!time.editMode" class="btn btn-default" ng-click="vm.editTime(time, true)"><span class="glyphicon glyphicon-pencil"></span></div>
-										<div ng-if="!time.editMode" class="btn btn-default" ng-click="vm.deleteTime(time)"><span class="glyphicon glyphicon-remove"></span></div>
+										<div class="btn btn-default" ng-click="vm.deleteTime(time)"><span class="glyphicon glyphicon-remove"></span></div>
                                     </td>
                                 </tr>
                                 <tbody>

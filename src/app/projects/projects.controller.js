@@ -23,7 +23,18 @@
             vm.content = ''
             vm.activeTab = 'edit';
             vm.loading = true;
+            vm.publishTimes = []
 
+
+            function getTimesArray(timesObject){
+                    var times = []
+                    _.map(timesObject,function(el){
+                        times.push(el.time);
+                    })
+                    vm.publishTimes = times.slice();
+                }
+
+            
             function bindEventsContent(projectsType, key) {
                 var contentRef = baseObject.$ref().child('content/' + projectsType + '/' + key);
                 contentRef.on('child_added', function (data) {
@@ -68,15 +79,18 @@
 
                 contentRef.on('child_added', function (data) {
                     vm.projects[projectsType][key]['params']['times'] = filterValidData(data.val());
+                    getTimesArray(vm.projects[projectsType][key]['params']['times'])
                     console.log(data.getKey(), data.val(), projectsType, key) ;
                 });
                 contentRef.on('child_changed', function (data) {
 					vm.projects[projectsType][key]['params']['times'] = filterValidData(data.val());
+                    getTimesArray(vm.projects[projectsType][key]['params']['times'])
                     console.log(data.getKey(), data.val(), projectsType, key) ;
                 });
 
                 contentRef.on('child_removed', function (data) {
 					vm.projects[projectsType][key]['params']['times'] = filterValidData(data.val());
+                    getTimesArray(vm.projects[projectsType][key]['params']['times'])
                     console.log(data.getKey(), data.val(), projectsType, key) ;
                 });
             }
@@ -109,7 +123,13 @@
                                 getProjectData(baseObject, 'vk')
                             }
 
-                            vm.setActiveProject(vm.projects.telegram['testChannelJem']);
+                            var projectKeys = Object.keys(vm.projects.telegram);
+                            projectKeys[0] = projectKeys[0] || Object.keys(vm.projects.vk)[0]
+                            if(projectKeys[0]){
+                                vm.setActiveProject(vm.projects.telegram[projectKeys[0]]);
+                            }
+
+                            
                         }
                     })
                     .catch(function (err) {
@@ -126,6 +146,7 @@
             vm.setActiveProject = function (project) {
                 if (project) {
                     vm.currentProject = project;
+                    getTimesArray(project['params']['times'])
                 }
             }
 
@@ -168,24 +189,13 @@
                 vm.timeModel = new Date(Date.now());
             }
 			
-
-			vm.saveTime = function(time){
-				var item = baseObject.$ref();
-                item.child('settings/channels/' + vm.currentProject.type + '/' + vm.currentProject.name + '/times/' + time.key).set(time.time );
-                time.editMode = false;
-                console.log(time)
-			}
 			
 			vm.deleteTime = function(time){
                 var item = baseObject.$ref();
                 item.child('settings/channels/' + vm.currentProject.type + '/' + vm.currentProject.name + '/times/' + time.key).remove();
                 console.log(time)
             }
-			
-			vm.editTime = function(time, flag){
-				time.editMode = !!flag;
-            }
-			
+	
 
             vm.editPost= function(post, flag){
                 post.editMode = !!flag;
@@ -193,7 +203,7 @@
 
             vm.savePost = function(post){
                 var item = baseObject.$ref();
-                item.child('content/' + vm.currentProject.type + '/' + vm.currentProject.name + '/' + post.key).set(post.text + ' ' + post.link );
+                item.child('content/' + vm.currentProject.type + '/' + vm.currentProject.name + '/' + post.key).set(post.link + ' ' + post.message );
                 post.editMode = false;
                 console.log(post)
             }
