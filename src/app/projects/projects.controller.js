@@ -19,7 +19,7 @@
                 text: '',
                 link: ''
             }
-			vm.timeModel = new Date();
+			vm.timeModel = new Date(Date.now());
             vm.content = ''
             vm.activeTab = 'edit';
 
@@ -126,11 +126,7 @@
                     vm.currentProject = project;
                 }
             }
-			
-			vm.checkValidTime = function(){
-				
-			}
-			
+
 			vm.getDataCount = function(list){
 				return list ? Object.keys(list).length : ''
 			}
@@ -158,6 +154,17 @@
             vm.showContent = function ($fileContent) {
                 vm.content = $fileContent;
             };
+			
+			vm.addTime = function () {
+				if(!vm.timeModel){
+					return;
+				}
+                var item = baseObject.$ref();
+				var timeString = vm.timeModel.toTimeString().slice(0,5)
+                item.child('settings/channels/' + vm.currentProject.type + '/' + vm.currentProject.name + '/times/').push(timeString)
+                vm.timeModel = new Date(Date.now());
+            }
+			
 
 			vm.saveTime = function(time){
 				var item = baseObject.$ref();
