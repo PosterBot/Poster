@@ -52,17 +52,28 @@
 			
 			function bindEventsSettings(projectsType, key) {
                 var contentRef = baseObject.$ref().child('settings/channels/' + projectsType + '/' + key );
+                var timePattern = /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/
+                function filterValidData(data){
+                    var dataSettings = {}
+                    _.forEach(data, function(value, key){
+                        if(value.toString().match(timePattern)){
+                            dataSettings[key] = value;
+                        }
+                    })
+                    return dataSettings;
+                }
+
                 contentRef.on('child_added', function (data) {
-					vm.projects[projectsType][key]['params']['times'] = data.val();
+                    vm.projects[projectsType][key]['params']['times'] = filterValidData(data.val());
                     console.log(data.getKey(), data.val(), projectsType, key) ;
                 });
                 contentRef.on('child_changed', function (data) {
-					vm.projects[projectsType][key]['params']['times'] = data.val();
+					vm.projects[projectsType][key]['params']['times'] = filterValidData(data.val());
                     console.log(data.getKey(), data.val(), projectsType, key) ;
                 });
 
                 contentRef.on('child_removed', function (data) {
-					vm.projects[projectsType][key]['params']['times'] = data.val();
+					vm.projects[projectsType][key]['params']['times'] = filterValidData(data.val());
                     console.log(data.getKey(), data.val(), projectsType, key) ;
                 });
             }
