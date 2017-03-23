@@ -29,6 +29,11 @@
 
 .posts-list{
     padding-top: 10px;
+    height: 650px;
+    overflow-y: auto;
+    div{
+        overflow-x: hidden;
+    }
     caption{
         padding-left:10px;
     }
@@ -47,3 +52,35 @@ td {
   word-wrap:break-word;
   word-break:break-all;
 }
+.content .panel-body{
+    position: relative;
+
+    .loading-panel{
+        position: absolute;
+        background-color: white;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        .spinner {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            display: inline-block;
+            animation: spin 2s infinite linear
+            
+        }
+
+    }
+}
+
+
+@media (min-width: 768px) {
+    .left-panel, 
+    .left-panel .panel,
+    .content, 
+    .content .panel {
+        height:800px;
+    }
+}
+

@@ -22,6 +22,7 @@
 			vm.timeModel = new Date(Date.now());
             vm.content = ''
             vm.activeTab = 'edit';
+            vm.loading = true;
 
             function bindEventsContent(projectsType, key) {
                 var contentRef = baseObject.$ref().child('content/' + projectsType + '/' + key);
@@ -98,6 +99,7 @@
                 baseObject = $firebaseObject(reference);
                 baseObject.$loaded()
                     .then(function () {
+                        vm.loading = false;
                         console.log(baseObject);
                         if (baseObject.settings && baseObject.settings.channels) {
                             if (baseObject.settings.channels.telegram) {
@@ -149,6 +151,7 @@
                     
                 })
                 vm.content = '';
+                vm.activeTab = 'edit';
             }
 
             vm.showContent = function ($fileContent) {
