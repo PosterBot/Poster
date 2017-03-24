@@ -11,18 +11,51 @@
 }
 
 .projects-list {
+    padding: 0px;
+
     .list-item{
-        padding-bottom: 5px;
-        margin-bottom: 5px;
-        border-bottom: 1px #ddd solid;
         color: #337ab7;
+        overflow: hidden;
+        margin-top: 15px;
+        padding: 5px 10px 5px 15px;
+        text-transform: uppercase;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        letter-spacing: 0.05em;
+        font-size: 1.1rem;
+        line-height: 1.1em;
     }
 
     ul{
         padding-left:5px;
+        margin: 0;
+        padding: 0 15px 0 0;
+        list-style: none;
+        font-size: 1.3rem;
+        line-height: 1.5em;
 
         li{
-            list-style: none;
+          display: -ms-flexbox;
+          display: flex;
+          -ms-flex-align: center;
+          align-items: center;
+          padding: 5px 10px 5px 15px;
+          border-radius: 0 4px 4px 0;
+          color: #242628;
+          opacity: 0.9;
+          transition: none;
+        }
+
+        li:active {
+          background: rgb(136, 190, 236);
+          color: #fff;
+          opacity: 1;
+        }
+
+        li:not(.active):hover {
+          background: rgba(91, 164, 229, 0.15000000000000002);
+          color: #242628;
+          opacity: 1;
         }
     }
 }
@@ -33,9 +66,19 @@
     overflow-y: auto;
     caption{
         padding-left:10px;
+        padding-left: 10px;
+        border-bottom: #ddd;
+        border-bottom-width: 2px;
+        border-bottom-style: inset;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #cccccc;
     }
     .edit-time-button{
         margin-top: 35px;
+    }
+    .badge {
+        float: right;
     }
 }
 
@@ -75,17 +118,63 @@ td {
             left: 50%;
             display: inline-block;
             animation: spin 2s infinite linear
-            
+
         }
 
     }
 }
 
+.panel-default .panel-heading {
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.btn {
+  font-size: 11px;
+  padding: 0 5px;
+}
+
+.btn-xs {
+  line-height: 24px;
+  min-width: 25px;
+  height: 25px;
+  border-width: 0px;
+}
+
+table {
+  tbody {
+    input {
+      display: block;
+      padding: 8px 10px;
+      width: 100%;
+      border: 1px solid #dfe1e3;
+      border-radius: 4px;
+      color: #666;
+      font-size: 1.4rem;
+      font-weight: normal;
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
+      transition: border-color 0.15s linear;
+      -webkit-appearance: none;
+    }
+    p {
+      margin: 5px;
+    }
+
+    .btn {
+      margin-top: 5px;
+      margin-right: 3px;
+    }
+  }
+}
+
 
 @media (min-width: 768px) {
-    .left-panel, 
+    .left-panel,
     .left-panel .panel,
-    .content, 
+    .content,
     .content .panel {
         height:800px;
     }
@@ -102,5 +191,4 @@ td {
 @keyframes spin {
     from {transform:rotate(0deg);}
     to {transform:rotate(360deg);}
-}       
-
+}
