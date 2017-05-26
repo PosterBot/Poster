@@ -1,0 +1,9 @@
+{
+"settings": {
+    "apiKey": "AIzaSyDZaadOu60bZVR02XZ2u9qzbDEp7ptn7ow",
+    "authDomain": "posterbot-47067.firebaseapp.com",
+    "databaseURL": "https://posterbot-47067.firebaseio.com",
+    "storageBucket": "posterbot-47067.appspot.com",
+    "messagingSenderId": "918512156007"
+}
+}

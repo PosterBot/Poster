@@ -22,7 +22,7 @@
 				controllerAs: 'vm',
 				title: 'Login'
 			});
-    $urlRouterProvider.otherwise('/');
+    $urlRouterProvider.otherwise('/projects');
   }
 
 })();

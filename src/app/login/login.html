@@ -1,0 +1,30 @@
+<div class='container'>
+<div class = 'row'>
+<div class='col-xs-12 col-sm-6 col-sm-offset-3 login-element'>
+<h3>Login </h3>
+<form class='login-form' name="loginform" ng-submit="vm.loginUser(userForm.$valid)" novalidate>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Email</label>
+        <input type="email" 
+            class="form-control" 
+            id="exampleInputEmail1" 
+            name="exampleInputEmail1"
+            required = "true"
+            placeholder="Email" ng-model = "vm.userCreds.login">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" 
+            class="form-control" 
+            id="exampleInputPassword1" 
+            name="exampleInputPassword1"
+            required = "true"
+            placeholder="Password" 
+            ng-model = "vm.userCreds.password">
+    </div>
+    <p ng-show="loginform.exampleInputEmail1.$invalid && !loginform.exampleInputEmail1.$pristine" class="help-block">You name is required.</p>
+    <button type="submit" class="btn btn-default" ng-disabled="loginform.$invalid">Submit</button>
+</form>
+</div>
+</div>
+</div>

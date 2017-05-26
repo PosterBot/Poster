@@ -6,6 +6,13 @@
         padding-right: 2px;
         .main-header{
             min-height: 60px;
+
+            h4{
+                display: inline-block;
+                width: calc(100% - 100px);
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
         }
     }
 }
@@ -103,6 +110,18 @@ td {
 .content .panel-body{
     position: relative;
 
+    .btn {
+  font-size: 11px;
+  padding: 0 5px;
+}
+
+.btn-xs {
+  line-height: 24px;
+  min-width: 25px;
+  height: 25px;
+  border-width: 0px;
+}
+
     .loading-panel{
         position: absolute;
         background-color: white;
@@ -130,17 +149,7 @@ td {
   letter-spacing: 0.05em;
 }
 
-.btn {
-  font-size: 11px;
-  padding: 0 5px;
-}
 
-.btn-xs {
-  line-height: 24px;
-  min-width: 25px;
-  height: 25px;
-  border-width: 0px;
-}
 
 table {
   tbody {

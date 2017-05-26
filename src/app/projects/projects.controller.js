@@ -3,7 +3,7 @@
 
     angular
         .module('angularPoster')
-        .controller('ProjectsController', ['firebaseService', '$firebaseObject', function (firebaseService, $firebaseObject) {
+        .controller('ProjectsController', ['firebaseService', '$firebaseObject', '$location', 'authService', function (firebaseService, $firebaseObject, $location, authService) {
             var vm = this,
                 firebaseSettings,
                 baseObject,
@@ -132,7 +132,8 @@
             }
 
             function init() {
-                firebaseService.init().then(firebaseInitCallback)
+                var ref = firebaseService.getBasereference();
+                firebaseInitCallback(ref);
             }
 
             init();
@@ -203,6 +204,13 @@
             vm.deletePost = function (post) {
                 var item = baseObject.$ref();
                 item.child('content/' + vm.currentProject.type + '/' + vm.currentProject.name + '/' + post.key).remove();
+            }
+
+            vm.logOut = function(){
+                authService.logOutUser().then(function(){
+                    baseObject.$destroy();
+                    $location.path('login')
+                });
             }
 
         }]);
