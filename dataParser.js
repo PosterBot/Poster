@@ -23,24 +23,32 @@ module.exports = {
 		}
 		return result;
 	},
-	parseTitles: function(body, titles){
+	parseTitles: function(body, titles, q){
 		console.log($(body).find('.content_left.search-page .post__title_link'));
 		var items = $(body).find('.post__title_link');
-		items = _.map(items,function(el){return $(el).attr('href')});
+		items = _.map(items,function(el){
+			el = $(el); 
+			if(el.text().indexOf(q) > -1 ){
+				return $(el).attr('href');
+			}else {
+				return null;
+			}
+		});
+		items = _.filter(items, function(el){return el !== null});
 		var newPosts = _.difference(items,titles);
 		return newPosts;
 	},
-	parseNewContent: function(body){
+	parseNewContent: function(body, targetSelector, lastElement, saveLastPointText){
 
 	var $body = $(body),
 		$a = $body.find('a'),
 		arr = [],
 		resultArr = [],
-		lastEl = $body.find('a[name=intresting]');
+		lastEl = $body.find(lastElement);
     if (!lastEl.length) {
         var links = $body.find('.content a');
         for (var i = 0; i < links.length; i++) {
-            if ($(links[i]).text().indexOf('Дайджест за прошлую неделю') > -1) {
+            if ($(links[i]).text().indexOf(saveLastPointText) > -1) {
                 lastEl = $(links[i]);
                 break;
             }
@@ -49,7 +57,7 @@ module.exports = {
 
     var lastIndex = $a.index(lastEl);
 	console.log(lastIndex)
-    $body.find('.post__body_full li a').each(function() {
+    $body.find(targetSelector).each(function() {
         var elementOffset = $(this);
         if ($a.index(elementOffset) < lastIndex) {
             arr.push({

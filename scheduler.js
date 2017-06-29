@@ -44,14 +44,16 @@ module.exports = function(settings){
 						var request = vkReuqestManager.getTitleLinks(settings.link);
 						request.then(function(data){
 							var oldTitles = fileManager.getOldTitlesFromFile(settings.resultFile);
-							var newPosts = dataParser.parseTitles(data, oldTitles);
+							var newPosts = dataParser.parseTitles(data, oldTitles, settings.link.q);
 							fileManager.addNewArrayDataFile(newPosts, settings.resultFile);
 							if(newPosts.length){
 								var contetnRequest = vkReuqestManager.getNewContent(newPosts);
+								console.log(contetnRequest)
 								contetnRequest.then(function(data){
 									var resultData = [];
+									console.log('new Data')
 									for(var i = 0; i < data.length; i++){
-										var result = dataParser.parseNewContent(data[i]);
+										var result = dataParser.parseNewContent(data[i], settings.link.targetSelector, settings.link.lastElement, settings.link.saveLastPoint);
 										resultData = resultData.concat(result);
 									}
 									if(!Array.isArray(settings.filePath)){
